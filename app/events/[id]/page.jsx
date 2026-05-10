@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import BookingButton from "@/components/BookingButton";
 
 export const dynamic = "force-dynamic";
 
@@ -46,55 +47,108 @@ export default async function EventDetailsPage({ params }) {
     notFound();
   }
 
+  let alreadyBooked = false;
+
+  if (user?.role === "attendee") {
+    const [bookings] = await db.execute(
+      `SELECT id
+       FROM bookings
+       WHERE event_id = ? AND attendee_id = ? AND status = 'booked'
+       LIMIT 1`,
+      [event.id, user.id]
+    );
+
+    alreadyBooked = Boolean(bookings[0]);
+  }
+
   const spacesLeft = Number(event.capacity) - Number(event.booked_count);
 
   return (
-    <section className="mx-auto max-w-4xl rounded-xl bg-white p-8 shadow-sm">
-      <Link href="/events" className="text-sm text-blue-700 hover:underline">
-        Back to events
-      </Link>
+    <section className="page-container">
+      <div className="card p-8">
+        <Link href="/events" className="font-bold text-blue-700 hover:underline">
+          Back to events
+        </Link>
 
-      <h1 className="mt-4 text-3xl font-bold">{event.title}</h1>
-
-      <div className="mt-4 space-y-2 text-gray-700">
-        <p>
-          <span className="font-semibold">Organiser:</span>{" "}
-          {event.organiser_name}
-        </p>
-        <p>
-          <span className="font-semibold">Location:</span> {event.location}
-        </p>
-        <p>
-          <span className="font-semibold">Date:</span>{" "}
-          {formatDate(event.event_date)}
-        </p>
-        <p>
-          <span className="font-semibold">Spaces left:</span> {spacesLeft}
-        </p>
-      </div>
-
-      <div className="mt-6 border-t pt-6">
-        <h2 className="mb-2 text-xl font-semibold">About this event</h2>
-        <p className="whitespace-pre-line text-gray-600">{event.description}</p>
-      </div>
-
-      <div className="mt-8 rounded bg-blue-50 p-4 text-blue-800">
-        {user?.role === "attendee" ? (
-          <p>
-            Booking button will be added in the next step when we build the
-            booking system.
+        <div className="mt-6">
+          <p className="mb-2 text-sm font-extrabold uppercase tracking-wide text-blue-700">
+            Event Details
           </p>
-        ) : !user ? (
-          <p>
-            Please{" "}
-            <Link href="/login" className="font-semibold underline">
-              login
-            </Link>{" "}
-            as an attendee to book this event.
+
+          <h1 className="text-4xl font-extrabold text-gray-900">
+            {event.title}
+          </h1>
+        </div>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="rounded-xl bg-gray-50 p-5">
+            <p className="text-sm font-bold uppercase text-gray-500">
+              Organiser
+            </p>
+            <p className="mt-1 text-lg font-bold text-gray-900">
+              {event.organiser_name}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-5">
+            <p className="text-sm font-bold uppercase text-gray-500">
+              Location
+            </p>
+            <p className="mt-1 text-lg font-bold text-gray-900">
+              {event.location}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-5">
+            <p className="text-sm font-bold uppercase text-gray-500">
+              Date
+            </p>
+            <p className="mt-1 text-lg font-bold text-gray-900">
+              {formatDate(event.event_date)}
+            </p>
+          </div>
+
+          <div className="rounded-xl bg-gray-50 p-5">
+            <p className="text-sm font-bold uppercase text-gray-500">
+              Spaces left
+            </p>
+            <p className="mt-1 text-lg font-bold text-gray-900">
+              {spacesLeft} of {event.capacity}
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-8 border-t border-gray-200 pt-8">
+          <h2 className="mb-3 text-2xl font-extrabold text-gray-900">
+            About this event
+          </h2>
+
+          <p className="whitespace-pre-line leading-8 text-gray-700">
+            {event.description}
           </p>
-        ) : (
-          <p>Your current role is {user.role}. Only attendees can book events.</p>
-        )}
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-blue-100 bg-blue-50 p-6">
+          {user?.role === "attendee" ? (
+            <BookingButton
+              eventId={event.id}
+              spacesLeft={spacesLeft}
+              alreadyBooked={alreadyBooked}
+            />
+          ) : !user ? (
+            <p className="text-gray-800">
+              Please{" "}
+              <Link href="/login" className="font-bold text-blue-700 underline">
+                login
+              </Link>{" "}
+              as an attendee to book this event.
+            </p>
+          ) : (
+            <p className="font-bold text-gray-800">
+              Your current role is {user.role}. Only attendees can book events.
+            </p>
+          )}
+        </div>
       </div>
     </section>
   );
