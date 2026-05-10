@@ -1,6 +1,48 @@
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=workshophub
-DB_PORT=3306
-SESSION_DAYS=7
+CREATE DATABASE IF NOT EXISTS workshophub;
+USE workshophub;
+
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS events;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  role ENUM('attendee', 'organiser', 'admin') NOT NULL DEFAULT 'attendee',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  organiser_id INT NOT NULL,
+  title VARCHAR(150) NOT NULL,
+  description TEXT NOT NULL,
+  location VARCHAR(150) NOT NULL,
+  event_date DATETIME NOT NULL,
+  capacity INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (organiser_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE bookings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  event_id INT NOT NULL,
+  attendee_id INT NOT NULL,
+  status ENUM('booked', 'cancelled') NOT NULL DEFAULT 'booked',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+  FOREIGN KEY (attendee_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE(event_id, attendee_id)
+);
