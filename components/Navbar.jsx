@@ -2,16 +2,20 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   async function loadUser() {
     try {
-      const response = await fetch("/api/auth/me");
+      const response = await fetch("/api/auth/me", {
+        cache: "no-store",
+      });
 
       if (!response.ok) {
         setUser(null);
@@ -28,7 +32,7 @@ export default function Navbar() {
   }
 
   async function handleLogout() {
-    // Logout removes the session from the database and clears the cookie
+    // Logout removes the session from MySQL and clears the cookie
     await fetch("/api/auth/logout", {
       method: "POST",
     });
@@ -40,7 +44,7 @@ export default function Navbar() {
 
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [pathname]);
 
   return (
     <nav className="border-b bg-white px-6 py-4 shadow-sm">
@@ -49,7 +53,7 @@ export default function Navbar() {
           WorkshopHub
         </Link>
 
-        <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-4 text-sm text-gray-700">
           <Link href="/" className="hover:text-blue-700">
             Home
           </Link>
@@ -93,7 +97,7 @@ export default function Navbar() {
 
           {!loading && user && (
             <div className="flex items-center gap-3">
-              <span className="text-gray-600">
+              <span className="text-gray-700">
                 {user.name} ({user.role})
               </span>
 
