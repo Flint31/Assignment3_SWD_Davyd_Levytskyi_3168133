@@ -47,13 +47,13 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <nav className="border-b bg-white px-6 py-4 shadow-sm">
+    <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 px-6 py-4 shadow-sm backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-blue-700">
+        <Link href="/" className="text-2xl font-extrabold tracking-tight text-blue-700">
           WorkshopHub
         </Link>
 
-        <div className="flex items-center gap-4 text-sm text-gray-700">
+        <div className="flex items-center gap-5 text-sm font-semibold text-gray-800">
           <Link href="/" className="hover:text-blue-700">
             Home
           </Link>
@@ -86,10 +86,7 @@ export default function Navbar() {
                 Login
               </Link>
 
-              <Link
-                href="/register"
-                className="rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-800"
-              >
+              <Link href="/register" className="btn-primary px-4 py-2">
                 Register
               </Link>
             </>
@@ -97,13 +94,13 @@ export default function Navbar() {
 
           {!loading && user && (
             <div className="flex items-center gap-3">
-              <span className="text-gray-700">
+              <span className="rounded-full bg-blue-50 px-3 py-2 text-blue-800">
                 {user.name} ({user.role})
               </span>
 
               <button
                 onClick={handleLogout}
-                className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700"
               >
                 Logout
               </button>

@@ -54,54 +54,62 @@ export default function LoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-md rounded-xl bg-white p-8 shadow-sm">
-      <h1 className="mb-6 text-2xl font-bold">Login</h1>
-
-      {error && (
-        <div className="mb-4 rounded bg-red-100 px-4 py-3 text-red-700">
-          {error}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="mb-1 block text-sm font-medium">Email</label>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={updateField}
-            className="w-full rounded border px-3 py-2"
-            placeholder="you@example.com"
-          />
+    <section className="mx-auto max-w-md">
+      <div className="card p-8">
+        <div className="mb-6">
+          <p className="mb-2 text-sm font-bold uppercase tracking-wide text-blue-700">
+            Welcome back
+          </p>
+          <h1 className="text-3xl font-extrabold text-gray-900">Login</h1>
         </div>
 
-        <div>
-          <label className="mb-1 block text-sm font-medium">Password</label>
-          <input
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={updateField}
-            className="w-full rounded border px-3 py-2"
-            placeholder="Your password"
-          />
-        </div>
+        {error && (
+          <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 font-medium text-red-700">
+            {error}
+          </div>
+        )}
 
-        <button
-          disabled={loading}
-          className="w-full rounded bg-blue-700 px-4 py-2 text-white hover:bg-blue-800 disabled:bg-gray-400"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="mb-2 block text-sm font-bold text-gray-800">
+              Email
+            </label>
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={updateField}
+              className="input"
+              placeholder="you@example.com"
+            />
+          </div>
 
-      <p className="mt-4 text-sm text-gray-600">
-        No account yet?{" "}
-        <Link href="/register" className="text-blue-700 hover:underline">
-          Register here
-        </Link>
-      </p>
+          <div>
+            <label className="mb-2 block text-sm font-bold text-gray-800">
+              Password
+            </label>
+            <input
+              name="password"
+              type="password"
+              value={form.password}
+              onChange={updateField}
+              className="input"
+              placeholder="Your password"
+            />
+          </div>
+
+          <button disabled={loading} className="btn-primary w-full">
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <p className="mt-5 text-sm text-gray-700">
+          No account yet?{" "}
+          <Link href="/register" className="font-bold text-blue-700 hover:underline">
+            Register here
+          </Link>
+        </p>
+      </div>
     </section>
   );
 }

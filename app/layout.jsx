@@ -10,10 +10,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        {/* Shared navigation for all pages */}
         <Navbar />
-
-        <main className="min-h-screen bg-gray-50 px-6 py-8">
+        <main className="min-h-screen bg-gray-100 px-6 py-12">
           {children}
         </main>
       </body>

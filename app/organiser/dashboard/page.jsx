@@ -45,63 +45,77 @@ export default async function OrganiserDashboardPage() {
   );
 
   return (
-    <section className="mx-auto max-w-6xl">
-      <div className="mb-6 flex items-center justify-between">
+    <section className="page-container">
+      <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Organiser Dashboard</h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mb-2 text-sm font-extrabold uppercase tracking-wide text-blue-700">
+            Organiser Area
+          </p>
+
+          <h1 className="text-4xl font-extrabold text-gray-900">
+            Organiser Dashboard
+          </h1>
+
+          <p className="mt-3 text-lg text-gray-700">
             Create, update, and manage your workshops.
           </p>
         </div>
 
-        <Link
-          href="/organiser/events/new"
-          className="rounded bg-blue-700 px-5 py-3 text-white hover:bg-blue-800"
-        >
+        <Link href="/organiser/events/new" className="btn-primary">
           Create Event
         </Link>
       </div>
 
       {events.length === 0 ? (
-        <div className="rounded-xl bg-white p-8 shadow-sm">
-          <p className="text-gray-600">
+        <div className="card p-8">
+          <p className="text-gray-700">
             You have not created any events yet.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-xl bg-white shadow-sm">
+        <div className="card overflow-hidden">
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-100 text-gray-900">
               <tr>
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Date</th>
-                <th className="px-4 py-3">Bookings</th>
-                <th className="px-4 py-3">Actions</th>
+                <th className="px-5 py-4 font-extrabold">Title</th>
+                <th className="px-5 py-4 font-extrabold">Location</th>
+                <th className="px-5 py-4 font-extrabold">Date</th>
+                <th className="px-5 py-4 font-extrabold">Bookings</th>
+                <th className="px-5 py-4 font-extrabold">Actions</th>
               </tr>
             </thead>
 
             <tbody>
               {events.map((event) => (
-                <tr key={event.id} className="border-t">
-                  <td className="px-4 py-3 font-medium">{event.title}</td>
-                  <td className="px-4 py-3">{event.location}</td>
-                  <td className="px-4 py-3">{formatDate(event.event_date)}</td>
-                  <td className="px-4 py-3">
+                <tr key={event.id} className="border-t border-gray-200">
+                  <td className="px-5 py-4 font-bold text-gray-900">
+                    {event.title}
+                  </td>
+
+                  <td className="px-5 py-4 text-gray-700">
+                    {event.location}
+                  </td>
+
+                  <td className="px-5 py-4 text-gray-700">
+                    {formatDate(event.event_date)}
+                  </td>
+
+                  <td className="px-5 py-4 text-gray-700">
                     {event.booked_count}/{event.capacity}
                   </td>
-                  <td className="px-4 py-3">
+
+                  <td className="px-5 py-4">
                     <div className="flex gap-2">
                       <Link
                         href={`/events/${event.id}`}
-                        className="rounded border px-3 py-2 text-sm hover:bg-gray-100"
+                        className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-900 hover:bg-gray-100"
                       >
                         View
                       </Link>
 
                       <Link
                         href={`/organiser/events/${event.id}/edit`}
-                        className="rounded bg-gray-800 px-3 py-2 text-sm text-white hover:bg-black"
+                        className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-bold text-white hover:bg-black"
                       >
                         Edit
                       </Link>
